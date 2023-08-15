@@ -14,10 +14,14 @@ House_Data = read.table(url('https://raw.githubusercontent.com/zbrotherton2158/o
 
 *The study*: In this section, you should give a description of the study underlying the dataset. Possible
 questions to be answered are the following:
+• What field does the data come from?
   This data comes from the assessors office of Iowa
+• What are the goals of the study? Are there any effects of particular interest?
   The purpose of this data is to be able to predict the value of a house in Ames Iowa
+• How might these goals be answered, i.e. tests / confidence intervals?
   Our areas of interest are the neighborhoods, lot area, total rooms above grade, year built, total
   square feet.
+  
 
 *The data*: In this section, you should describe the data set and possibly do some exploratory data
 analysis. For instance:
