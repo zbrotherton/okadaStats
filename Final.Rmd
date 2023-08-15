@@ -16,7 +16,8 @@ House_Data = read.table(url('https://raw.githubusercontent.com/zbrotherton2158/o
 questions to be answered are the following:
   This data comes from the assessors office of Iowa
   The purpose of this data is to be able to predict the value of a house in Ames Iowa
-  
+  Our areas of interest are the neighborhoods, lot area, total rooms above grade, year built, total
+  square feet.
 
 *The data*: In this section, you should describe the data set and possibly do some exploratory data
 analysis. For instance:
