@@ -1,6 +1,6 @@
 ---
 title: "Final Project"
-author: "Zane Brotherton"
+author: "Zane Brotherton, Nate Adam"
 date: "2023-08-14"
 output: pdf_document
 ---
