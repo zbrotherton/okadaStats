@@ -18,13 +18,23 @@ questions to be answered are the following:
   This data comes from the assessors office of Iowa
 • What are the goals of the study? Are there any effects of particular interest?
   The purpose of this data is to be able to predict the value of a house in Ames Iowa
+  Our areas of interest are the effect of the neighborhoods, lot area, total rooms above grade, year built, and total
+  square feet on the price of the house. 
 • How might these goals be answered, i.e. tests / confidence intervals?
-  Our areas of interest are the neighborhoods, lot area, total rooms above grade, year built, total
-  square feet.
   
 
 *The data*: In this section, you should describe the data set and possibly do some exploratory data
 analysis. For instance:
+
+```{r}
+require(corrplot)
+require(dplyr)
+?corrplot
+
+House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
+
+print(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
+```
 
 *The models*: In this section, you should develop a model for the data that will allow them to answer
 some of the specific goals of the study. Possible questions to be addressed here are the following:
