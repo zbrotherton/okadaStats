@@ -55,9 +55,9 @@ require(corrplot)
 require(dplyr)
 
 ```
+Numerical_Correlations = cor(House_Data_Numerical, House_Data_Numerical$SalePrice)
 
 ### Analysis
-
 • How are the predictor variables spread out? Are there any noteworthy features to their spread
 that could be highly influential observations?
 
@@ -88,7 +88,9 @@ The variables are seemingly random between discrete, ordinal, nominal, and conti
 
 ## The models 
 • Which predictor variables, if any, should be included in the model a priori?
+  neighborhoods, lot area, total rooms above grade, year built, and total square feet
 • Are there any interactions that should be considered for inclusion in the model?
+  
 • Are there any three way interactions that should be considered?
 • Are there any interactions that should NOT be considered?
 
