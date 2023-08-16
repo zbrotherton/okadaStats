@@ -23,26 +23,82 @@ questions to be answered are the following:
   This goal could be answered by a prediction model that, given information about a house, will output a 95% confidence interval predicting the price of the house.
 
 ## The data
+### Predictor Variable Spread
+```{r}
+require(tidyverse)
+Numerical_Count = length(select_if(House_Data, is.numeric))
+Categorical_Count = length(select_if(House_Data, negate(is.numeric)))
 
+```
+
+*Clean "none" values*
+```{r}
+
+# NOTE: Might have to revamp
+# Turned None's into 0's for respective rows
+
+
+for(colName in colnames(House_Data)){
+  if(colName != "Garage.Yr.Blt"){
+    print(colName)
+    colName = replace(colName, colName == ("None"), 0)
+  }
+}
+
+```
+
+
+### Correlation Info
+*Numerical Correlation*
 ```{r}
 require(corrplot)
 require(dplyr)
 ?corrplot
 
+# Correlations of all the numerical variables.
 House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
-Numerical_Correlations = sort(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
+cor(House_Data_Numerical, House_Data_Numerical$SalePrice)
+```
+
+*Categorical Correlation*
+```{r}
+require(tidyverse)
+
+House_Data_Categorical = data.frame(select_if(House_Data, negate(is.numeric)))
+
+x = summary(House_Data_Categorical)
 
 ```
 
-
 ### Analysis
+
 • How are the predictor variables spread out? Are there any noteworthy features to their spread
 that could be highly influential observations?
-  The variables are seemingly random between discrete, ordinal, nominal, and continuous types of variables. The most useful will most likely the those variables with lots of possible variety.
+
+The variables are seemingly random between discrete, ordinal, nominal, and continuous types of variables. Of these, we found 26 to be numerical and 54 categorical. Within the discrete variables, variables with a spread like fireplaces where despite being numerical only have values of 1 - arbitrarily small number may have a higher effect on the price per unit increase. 
+
 • Are any of the predictor variables highly correlated?
-  Overall quality has the highest correlation to housing price with 80.5%
 
-
+  The highest correlation numerical variables are:
+  
+  • Overall Quality (~0.805)
+  
+  • Gr. Living Area (~0.720)
+  
+  • Year Built (~0.57)
+  
+  • Full Bath (~0.561)
+  
+  • Year Remodeled (~0.535)
+  
+  • Rooms Above Ground (~0.504)
+  
+  • Fireplace (~0.48)
+  
+  • 1st Floor Square Ft. (~0.619)
+  
+  • 2nd Floor Square Ft. (~0.295)*
+  
 
 ## The models 
 • Which predictor variables, if any, should be included in the model a priori?
