@@ -32,11 +32,7 @@ that could be highly influential observations?
 ```{r}
 require(corrplot)
 require(dplyr)
-?corrplot
 
-House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
-
-print(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
 ```
 
 *The models*: In this section, you should develop a model for the data that will allow them to answer
@@ -45,6 +41,56 @@ some of the specific goals of the study. Possible questions to be addressed here
 • Are there any interactions that should be considered for inclusion in the model?
 • Are there any three way interactions that should be considered?
 • Are there any interactions that should NOT be considered?
+
+Model Draft
+```{r}
+#factorize these?
+model = lm(SalePrice ~ 
+             #Numerical
+             Overall.Qual +
+             Gr.Liv.Area +
+             Year.Built +
+             Year.Remod.Add +
+             Full.Bath +
+             #Categorical
+             Neighborhood +
+             Condition.1 +
+             Condition.2 +
+             Bldg.Type +
+             House.Style +
+             Roof.Matl +
+             Exter.Qual +
+             BsmtFin.Type.1 +
+             Kitchen.Qual +
+             Fireplace.Qu +
+             Garage.Type +
+             Pool.QC
+           , House_Data)
+summary(model)
+plot(model)
+
+```
+```{r}
+#to investigate numerical variables
+House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
+
+print(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
+```
+
+```{r}
+#to investigate categories
+library(tidyverse)
+House_Data_Categorical = data.frame(select_if(House_Data, negate(is.numeric)))
+House_Data_Categorical$SalePrice = House_Data$SalePrice
+
+boxplot(House_Data$SalePrice ~ House_Data$Full.Bath)
+
+sapply(lapply(House_Data_Categorical, unique), length)
+
+investigative_lm = lm(SalePrice ~ ., data = subset(House_Data_Categorical, 
+select = -c(Utilities,Lot.Frontage,Mas.Vnr.Area,BsmtFin.SF.1,BsmtFin.SF.2,Bsmt.Unf.SF,Total.Bsmt.SF,Garage.Yr.Blt,Garage.Area)))
+summary(investigative_lm)
+```
 
 
 *Results*: In this section, you should report the results obtained by fitting the proposed models in the
@@ -68,7 +114,3 @@ Ideally, there will be comments in the file, i.e. lines beginning with “#” t
 *Acknowledgements*: If you consult outside sources that refer to this data set, you should cite these
 as references, and describe what you used from each source. Sources include material found on the
 internet, journal articles and books.
-
-```{r read_data, eval=T, echo=T}
-url_path = "https://raw.githubusercontent.com/dlsun/pods/master/data/covid/"
-```
