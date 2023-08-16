@@ -35,9 +35,10 @@ require(corrplot)
 require(dplyr)
 ?corrplot
 
+# Numerical Variables and There Correlations
 House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
+Numerical_Correlations = sort(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
 
-print(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
 ```
 
 *The models*: In this section, you should develop a model for the data that will allow them to answer
