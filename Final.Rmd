@@ -18,16 +18,17 @@ questions to be answered are the following:
   This data comes from the assessors office of Iowa
 • What are the goals of the study? Are there any effects of particular interest?
   The purpose of this data is to be able to predict the value of a house in Ames Iowa
-  Our areas of interest are the effect of the neighborhoods, lot area, total rooms above grade, year built, and total
-  square feet on the price of the house. 
+  Our areas of interest are the effect of the neighborhoods, lot area, total rooms above grade, year built, and total square feet on the price of the house. 
 • How might these goals be answered, i.e. tests / confidence intervals?
-  
+  This goal could be answered by a prediction model that, given information about a house, will output a 95% confidence interval predicting the price of the house.
 
 *The data*: In this section, you should describe the data set and possibly do some exploratory data
 analysis. For instance:
 • How are the predictor variables spread out? Are there any noteworthy features to their spread
 that could be highly influential observations?
+  The variables are seemingly random between discrete, ordinal, nominal, and continuous types of variables. The most useful will most likely the those variables with lots of possible variety.
 • Are any of the predictor variables highly correlated?
+  Overall quality has the highest correlation to housing price with 80.5%
 
 ```{r}
 require(corrplot)
