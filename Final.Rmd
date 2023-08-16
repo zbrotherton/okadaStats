@@ -5,38 +5,88 @@ date: "2023-08-14"
 output: pdf_document
 ---
 
-**Project Description**:
+# Project Description
 
 ```{r}
 set.seed(123)
 House_Data = read.table(url('https://raw.githubusercontent.com/zbrotherton2158/okadaStats/master/ames2000_NAfix.csv'), sep=',', header=T)
 ```
 
-*The study*: In this section, you should give a description of the study underlying the dataset. Possible
+## The study
 questions to be answered are the following:
 • What field does the data come from?
   This data comes from the assessors office of Iowa
 • What are the goals of the study? Are there any effects of particular interest?
   The purpose of this data is to be able to predict the value of a house in Ames Iowa
-  Our areas of interest are the effect of the neighborhoods, lot area, total rooms above grade, year built, and total
-  square feet on the price of the house. 
+  Our areas of interest are the effect of the neighborhoods, lot area, total rooms above grade, year built, and total square feet on the price of the house. 
 • How might these goals be answered, i.e. tests / confidence intervals?
-  
+  This goal could be answered by a prediction model that, given information about a house, will output a 95% confidence interval predicting the price of the house.
 
-*The data*: In this section, you should describe the data set and possibly do some exploratory data
-analysis. For instance:
-• How are the predictor variables spread out? Are there any noteworthy features to their spread
-that could be highly influential observations?
-• Are any of the predictor variables highly correlated?
+## The data
+### Predictor Variable Spread
+```{r}
+require(tidyverse)
+Numerical_Count = length(select_if(House_Data, is.numeric))
+Categorical_Count = length(select_if(House_Data, negate(is.numeric)))
 
+```
+
+*Clean "none" values*
+```{r}
+
+# NOTE: Might have to revamp
+# Turned None's into 0's for respective rows
+
+
+for(colName in colnames(House_Data)){
+  if(colName != "Garage.Yr.Blt"){
+    print(colName)
+    colName = replace(colName, colName == ("None"), 0)
+  }
+}
+
+```
+
+
+### Correlation Info
+*Numerical Correlation*
 ```{r}
 require(corrplot)
 require(dplyr)
 
 ```
 
-*The models*: In this section, you should develop a model for the data that will allow them to answer
-some of the specific goals of the study. Possible questions to be addressed here are the following:
+### Analysis
+
+• How are the predictor variables spread out? Are there any noteworthy features to their spread
+that could be highly influential observations?
+
+The variables are seemingly random between discrete, ordinal, nominal, and continuous types of variables. Of these, we found 26 to be numerical and 54 categorical. Within the discrete variables, variables with a spread like fireplaces where despite being numerical only have values of 1 - arbitrarily small number may have a higher effect on the price per unit increase. 
+
+• Are any of the predictor variables highly correlated?
+
+  The highest correlation numerical variables are:
+  
+  • Overall Quality (~0.805)
+  
+  • Gr. Living Area (~0.720)
+  
+  • Year Built (~0.57)
+  
+  • Full Bath (~0.561)
+  
+  • Year Remodeled (~0.535)
+  
+  • Rooms Above Ground (~0.504)
+  
+  • Fireplace (~0.48)
+  
+  • 1st Floor Square Ft. (~0.619)
+  
+  • 2nd Floor Square Ft. (~0.295)*
+  
+
+## The models 
 • Which predictor variables, if any, should be included in the model a priori?
 • Are there any interactions that should be considered for inclusion in the model?
 • Are there any three way interactions that should be considered?
@@ -108,9 +158,9 @@ choice of model (i.e. do they vary widely for different choices of variables in 
 same intervals constructed on the training set. Are they very different? Which do you believe
 more?
 
-*Appendix*: In this section, you should attach a final, editied, copy of the R code used in the analysis.
+## Appendix 
 Ideally, there will be comments in the file, i.e. lines beginning with “#” to clarify what each part of the code is doing.
 
-*Acknowledgements*: If you consult outside sources that refer to this data set, you should cite these
+## Acknowledgements : If you consult outside sources that refer to this data set, you should cite these
 as references, and describe what you used from each source. Sources include material found on the
 internet, journal articles and books.
