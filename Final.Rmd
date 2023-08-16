@@ -5,14 +5,14 @@ date: "2023-08-14"
 output: pdf_document
 ---
 
-**Project Description**:
+# Project Description
 
 ```{r}
 set.seed(123)
 House_Data = read.table(url('https://raw.githubusercontent.com/zbrotherton2158/okadaStats/master/ames2000_NAfix.csv'), sep=',', header=T)
 ```
 
-*The study*: In this section, you should give a description of the study underlying the dataset. Possible
+## The study
 questions to be answered are the following:
 • What field does the data come from?
   This data comes from the assessors office of Iowa
@@ -22,34 +22,36 @@ questions to be answered are the following:
 • How might these goals be answered, i.e. tests / confidence intervals?
   This goal could be answered by a prediction model that, given information about a house, will output a 95% confidence interval predicting the price of the house.
 
-*The data*: In this section, you should describe the data set and possibly do some exploratory data
-analysis. For instance:
-• How are the predictor variables spread out? Are there any noteworthy features to their spread
-that could be highly influential observations?
-  The variables are seemingly random between discrete, ordinal, nominal, and continuous types of variables. The most useful will most likely the those variables with lots of possible variety.
-• Are any of the predictor variables highly correlated?
-  Overall quality has the highest correlation to housing price with 80.5%
+## The data
 
 ```{r}
 require(corrplot)
 require(dplyr)
 ?corrplot
 
-# Numerical Variables and There Correlations
 House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
 Numerical_Correlations = sort(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
 
 ```
 
-*The models*: In this section, you should develop a model for the data that will allow them to answer
-some of the specific goals of the study. Possible questions to be addressed here are the following:
+
+### Analysis
+• How are the predictor variables spread out? Are there any noteworthy features to their spread
+that could be highly influential observations?
+  The variables are seemingly random between discrete, ordinal, nominal, and continuous types of variables. The most useful will most likely the those variables with lots of possible variety.
+• Are any of the predictor variables highly correlated?
+  Overall quality has the highest correlation to housing price with 80.5%
+
+
+
+## The models 
 • Which predictor variables, if any, should be included in the model a priori?
 • Are there any interactions that should be considered for inclusion in the model?
 • Are there any three way interactions that should be considered?
 • Are there any interactions that should NOT be considered?
 
 
-*Results*: In this section, you should report the results obtained by fitting the proposed models in the
+## Results 
 previous section. Emphasis should be placed on clarity, as if the report were a statistical consultant’s
 report for a nonstatistician. For instance, loads of R output would, in general, not be acceptable. Plots
 and well-organized tables are good things to have in this section. Possible questions to be addressed
@@ -64,10 +66,10 @@ choice of model (i.e. do they vary widely for different choices of variables in 
 same intervals constructed on the training set. Are they very different? Which do you believe
 more?
 
-*Appendix*: In this section, you should attach a final, editied, copy of the R code used in the analysis.
+## Appendix 
 Ideally, there will be comments in the file, i.e. lines beginning with “#” to clarify what each part of the code is doing.
 
-*Acknowledgements*: If you consult outside sources that refer to this data set, you should cite these
+## Acknowledgements : If you consult outside sources that refer to this data set, you should cite these
 as references, and describe what you used from each source. Sources include material found on the
 internet, journal articles and books.
 
