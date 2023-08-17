@@ -157,16 +157,44 @@ summary(investigative_lm)
 
 ### Analysis
 
-• Which predictor variables, if any, should be included in the model a priority?
+• Which predictor variables, if any, should be included in the model a-priority?
 
 The highest correlation numerical variables and most statistically significant categorical listed under "The Data" are of the most interest and are the most prioritized in the model. (Neighborhoods, lot area, total rooms above grade, year built, and total square feet etc.)
 
 • Are there any interactions that should be considered for inclusion in the model?
 
+  • 1st Flr Sf ~ Gr Liv Area (High Correlations)
+  
+  • Bsmt Full Bath ~ Full Bath (A Bsmt Full Bath counts for a Full Bath)
+  
+  • Bsmt Half Bath ~ Half Bath (A Bsmt Half Bath counts for a Half Bath)
+  
+  • Heating ~ HeatingQC (Affect each other)
+  
+  • BsmtFin Type 1 ~ Bsmt Type 2 (Existence of Type 2 depends on existence of Type 1)
+  
+  • Exterior 1 ~ Exterior 2 (Existence of 2 depends on existence of 1)
+  
+  • Kitchen ~ KitchenQual (If kitchen > grade, it will have a higher quality)
+  
+  • Garage Qual ~ Garage Cond (Quality depends on Conditions)
+
+
 • Are there any three way interactions that should be considered?
 
+  • 1st Flr Sf ~ 2nd Flr Sf ~ Gr Liv Area (1st Flr Sf and Gr Liv Area have high correlations)
+  
+  • BsmtFin Type 1 ~ Bsmt Type 2 ~ Bsmt Cond (Condition is influenced by the finishing)
+  
+  • Neighborhood ~ Condition 1 ~ Condition 2 (All related to physical location)
+  
+  
 • Are there any interactions that should NOT be considered?
 
+  • Full Bath ~ TotRmsAbvGrd (Does not include bathrooms)
+  
+  • Exter Qual ~ Exter Cond (Can have good quality materials in bad condition)
+  
 
 ## Results
 
@@ -178,14 +206,16 @@ The highest correlation numerical variables and most statistically significant c
 
 Use your validation data to construct these intervals. Do these intervals seem very sensitive to the
 choice of model (i.e. do they vary widely for different choices of variables in the model)?
+
 • What is your estimated prediction accuracy for your model? (Evaluated on the validation set).
+
 • Compare the intervals constructed using your final selected model fit to the validation set to the
 same intervals constructed on the training set. Are they very different? Which do you believe
 more?
 
-## Appendix 
-Ideally, there will be comments in the file, i.e. lines beginning with “#” to clarify what each part of the code is doing.
 
-## Acknowledgements : If you consult outside sources that refer to this data set, you should cite these
-as references, and describe what you used from each source. Sources include material found on the
-internet, journal articles and books.
+## Acknowledgements
+
+  In: Stanford University. http://web.stanford.edu/class/stats191/data/amesdoc.txt. Accessed 14 Aug 2023
+  
+  
