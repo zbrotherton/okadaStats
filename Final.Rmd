@@ -15,7 +15,7 @@ House_Data = read.table(url('https://raw.githubusercontent.com/zbrotherton2158/o
 ## The study
 questions to be answered are the following:
 • What field does the data come from?
-  This data comes from the assessors office of Iowa
+  This data comes from the assessors office of Ames, Iowa
 • What are the goals of the study? Are there any effects of particular interest?
   The purpose of this data is to be able to predict the value of a house in Ames Iowa
   Our areas of interest are the effect of the neighborhoods, lot area, total rooms above grade, year built, and total square feet on the price of the house. 
@@ -37,14 +37,38 @@ Categorical_Count = length(select_if(House_Data, negate(is.numeric)))
 # NOTE: Might have to revamp
 # Turned None's into 0's for respective rows
 
+#for(colName in colnames(House_Data)){
+#  if(colName != "Garage.Yr.Blt"){
+#    print(colName)
+#    colName = replace(colName, colName == ("None"), 0)
+#  }
+#}
 
-for(colName in colnames(House_Data)){
-  if(colName != "Garage.Yr.Blt"){
-    print(colName)
-    colName = replace(colName, colName == ("None"), 0)
+# j is the column of each selected box
+for (j in 1:80){ 
+  # clear the haveNumbers in case it has values
+  haveNumbers = c()
+  # i is the row of each selected box
+  for (i in 1:2000) {
+    # if the selected box is empty, fill it with "None"
+    if (House_Data[i,j] == "") {
+      House_Data[i,j] = "None"
+    }
+    # record whether the selected box contained a number in a list called haveNumbers
+    haveNumbers = c(haveNumbers, !grepl("\\D", House_Data[i,j]))
+  }
+  # if any of the selected boxes in the column contain a number,
+  # replace all "None"s in the column with 0s
+  if (any(haveNumbers) && (j != 59)) { 
+    House_Data[j] = replace(House_Data[j], House_Data[j] == "None", 0)
   }
 }
+# print the data set to see if it worked
+print(House_Data)
 
+#House_Data = replace(House_Data, House_Data == 'None', 0)
+#print(as.numeric(House_Data$Street))
+#print(data.frame(select_if(House_Data, negate(is.numeric))))
 ```
 
 
