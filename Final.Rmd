@@ -35,40 +35,22 @@ Categorical_Count = length(select_if(House_Data, negate(is.numeric)))
 ```{r}
 
 # NOTE: Might have to revamp
-# Turned None's into 0's for respective rows
+# Turned Nones into 0's for respective rows
+# Filled Empty boxes with "None" for categorical variables. 
 
-#for(colName in colnames(House_Data)){
-#  if(colName != "Garage.Yr.Blt"){
-#    print(colName)
-#    colName = replace(colName, colName == ("None"), 0)
-#  }
-#}
-
-# j is the column of each selected box
 for (j in 1:80){ 
-  # clear the haveNumbers in case it has values
   haveNumbers = c()
-  # i is the row of each selected box
   for (i in 1:2000) {
-    # if the selected box is empty, fill it with "None"
     if (House_Data[i,j] == "") {
       House_Data[i,j] = "None"
     }
-    # record whether the selected box contained a number in a list called haveNumbers
     haveNumbers = c(haveNumbers, !grepl("\\D", House_Data[i,j]))
   }
-  # if any of the selected boxes in the column contain a number,
-  # replace all "None"s in the column with 0s
   if (any(haveNumbers) && (j != 59)) { 
     House_Data[j] = replace(House_Data[j], House_Data[j] == "None", 0)
   }
 }
-# print the data set to see if it worked
-print(House_Data)
 
-#House_Data = replace(House_Data, House_Data == 'None', 0)
-#print(as.numeric(House_Data$Street))
-#print(data.frame(select_if(House_Data, negate(is.numeric))))
 ```
 
 *Partition the data*
@@ -117,14 +99,11 @@ The variables are seemingly random between discrete, ordinal, nominal, and conti
   
   • 2nd Floor Square Ft. (~0.295)*
   
+  The most statistically significant categorical variables are:
+  
+  
 
 ## The models 
-• Which predictor variables, if any, should be included in the model a priori?
-  neighborhoods, lot area, total rooms above grade, year built, and total square feet
-• Are there any interactions that should be considered for inclusion in the model?
-  
-• Are there any three way interactions that should be considered?
-• Are there any interactions that should NOT be considered?
 
 Model Draft
 ```{r}
@@ -176,15 +155,27 @@ select = -c(Utilities,Lot.Frontage,Mas.Vnr.Area,BsmtFin.SF.1,BsmtFin.SF.2,Bsmt.U
 summary(investigative_lm)
 ```
 
+### Analysis
 
-*Results*: In this section, you should report the results obtained by fitting the proposed models in the
-previous section. Emphasis should be placed on clarity, as if the report were a statistical consultant’s
-report for a nonstatistician. For instance, loads of R output would, in general, not be acceptable. Plots
-and well-organized tables are good things to have in this section. Possible questions to be addressed
-here are the following:
+• Which predictor variables, if any, should be included in the model a priority?
+
+The highest correlation numerical variables and most statistically significant categorical listed under "The Data" are of the most interest and are the most prioritized in the model. (Neighborhoods, lot area, total rooms above grade, year built, and total square feet etc.)
+
+• Are there any interactions that should be considered for inclusion in the model?
+
+• Are there any three way interactions that should be considered?
+
+• Are there any interactions that should NOT be considered?
+
+
+## Results
+
 • What is the final regression model for the data?
+
 • Using the standard diagnostic tests, does the model appear to fit the data well?
+
 • What are the final confidence intervals for the effects of interest mentioned in the study section?
+
 Use your validation data to construct these intervals. Do these intervals seem very sensitive to the
 choice of model (i.e. do they vary widely for different choices of variables in the model)?
 • What is your estimated prediction accuracy for your model? (Evaluated on the validation set).
