@@ -71,13 +71,21 @@ print(House_Data)
 #print(data.frame(select_if(House_Data, negate(is.numeric))))
 ```
 
+*Partition the data*
+```{r}
+N = nrow(House_Data)
+num_train = as.integer(0.7 * N)
+train_idx = sample(1:N, size=num_train, replace=F)
+test_idx = setdiff(1:N, train_idx)
+House_Data_Train = House_Data[train_idx,]
+House_Data_Test = House_Data[test_idx,]
+```
 
 ### Correlation Info
 *Numerical Correlation*
 ```{r}
 require(corrplot)
 require(dplyr)
-
 ```
 Numerical_Correlations = cor(House_Data_Numerical, House_Data_Numerical$SalePrice)
 
