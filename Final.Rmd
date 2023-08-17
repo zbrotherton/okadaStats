@@ -129,7 +129,7 @@ The variables are seemingly random between discrete, ordinal, nominal, and conti
 Model Draft
 ```{r}
 #factorize these?
-model = lm(SalePrice ~ 
+model = lm(sqrt(SalePrice) ~ 
              #Numerical
              Overall.Qual +
              Gr.Liv.Area +
@@ -139,7 +139,7 @@ model = lm(SalePrice ~
              #Categorical
              Neighborhood +
              Condition.1 +
-             Condition.2 +
+          #   Condition.2 +
              Bldg.Type +
              House.Style +
              Roof.Matl +
@@ -149,7 +149,7 @@ model = lm(SalePrice ~
              Fireplace.Qu +
              Garage.Type +
              Pool.QC
-           , House_Data)
+           , House_Data_Train)
 summary(model)
 plot(model)
 
@@ -176,6 +176,15 @@ select = -c(Utilities,Lot.Frontage,Mas.Vnr.Area,BsmtFin.SF.1,BsmtFin.SF.2,Bsmt.U
 summary(investigative_lm)
 ```
 
+R^2 of testing set
+```{r}
+plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
+
+
+r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
+          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
+print(r2)
+```
 
 *Results*: In this section, you should report the results obtained by fitting the proposed models in the
 previous section. Emphasis should be placed on clarity, as if the report were a statistical consultant’s
