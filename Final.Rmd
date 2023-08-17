@@ -144,6 +144,7 @@ summary(model)
 plot(model)
 
 ```
+
 ```{r}
 #to investigate numerical variables
 House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
