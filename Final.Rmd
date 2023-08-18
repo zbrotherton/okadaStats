@@ -101,28 +101,20 @@ The variables are seemingly random between discrete, ordinal, nominal, and conti
   
   The most statistically significant categorical variables are:
   
-  • Overall.Qual (|t|<2e-16)
+  • Neighborhood (4)
   
-  • Gr.Liv.Area (|t|<2e-16)
+  • Condition.2 (1)
   
-  • Year.Built (|t|<9.05e-15)
+  • Bldg.Type (3)
   
-  • Year.Remod.Add (|t|<1.01e-06)
+  • House.Style (2)
   
-  • Neighborhood (|t|<??)
+  • Roof.Mat (6)
   
-  • Condition.2 (|t|<??)
+  • Exter.Qual (3)
   
-  • Bldg.Type (|t|<??)
+  • Kitchen.Qual (3)
   
-  • House.Style (|t|<??)
-  
-  • Roof.Mat (|t|<??)
-  
-  • Exter.Qual (|t|<??)
-  
-  • Kitchen.Qual (|t|<??)
-
 ## The models 
 
 *Correlation between Numerical Features*
@@ -226,7 +218,6 @@ The highest correlation numerical variables and most statistically significant c
   
   • Exter Qual ~ Exter Cond (Can have good quality materials in bad condition)
   
-
 ## Results
 
 • What is the final regression model for the data?
