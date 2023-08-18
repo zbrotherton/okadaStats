@@ -101,11 +101,42 @@ The variables are seemingly random between discrete, ordinal, nominal, and conti
   
   The most statistically significant categorical variables are:
   
+  • Overall.Qual (|t|<2e-16)
   
+  • Gr.Liv.Area (|t|<2e-16)
+  
+  • Year.Built (|t|<9.05e-15)
+  
+  • Year.Remod.Add (|t|<1.01e-06)
+  
+  • Neighborhood (|t|<??)
+  
+  • Condition.2 (|t|<??)
+  
+  • Bldg.Type (|t|<??)
+  
+  • House.Style (|t|<??)
+  
+  • Roof.Mat (|t|<??)
+  
+  • Exter.Qual (|t|<??)
+  
+  • Kitchen.Qual (|t|<??)
 
 ## The models 
 
-Model Draft
+*Correlation between Numerical Features*
+```{r}
+
+Numerical_Model_Features = data.frame(Overall_Quality = House_Data$Overall.Qual, Living_Area = House_Data$Gr.Liv.Area, Year_Built = House_Data$Year.Built, Year_Remodel = House_Data$Year.Remod.Add, Full_Bath = House_Data$Full.Bath)
+
+
+corrplot(cor(Numerical_Model_Features), method = "number")
+
+```
+
+
+*Model Draft*
 ```{r}
 #factorize these?
 model = lm(sqrt(SalePrice) ~ 
@@ -133,11 +164,10 @@ summary(model)
 plot(model)
 
 ```
+
 ```{r}
 #to investigate numerical variables
 House_Data_Numerical = data.frame(select_if(House_Data, is.numeric))
-
-print(cor(House_Data_Numerical, House_Data_Numerical$SalePrice))
 ```
 
 ```{r}
@@ -153,6 +183,7 @@ sapply(lapply(House_Data_Categorical, unique), length)
 investigative_lm = lm(SalePrice ~ ., data = subset(House_Data_Categorical, 
 select = -c(Utilities,Lot.Frontage,Mas.Vnr.Area,BsmtFin.SF.1,BsmtFin.SF.2,Bsmt.Unf.SF,Total.Bsmt.SF,Garage.Yr.Blt,Garage.Area)))
 summary(investigative_lm)
+
 ```
 
 ### Analysis
@@ -233,3 +264,6 @@ more?
   In: Stanford University. http://web.stanford.edu/class/stats191/data/amesdoc.txt. Accessed 14 Aug 2023
   
   
+Questions: 
+Why did the example slide drop Crim in the example slides.
+
