@@ -131,7 +131,7 @@ corrplot(cor(Numerical_Model_Features), method = "number")
 *Model Draft*
 ```{r}
 #factorize these?
-model = lm(SalePrice ~ 
+model = lm(sqrt(SalePrice) ~ 
              #Numerical
              Overall.Qual +
              Gr.Liv.Area +
@@ -141,7 +141,7 @@ model = lm(SalePrice ~
              #Categorical
              Neighborhood +
              Condition.1 +
-             Condition.2 +
+          #   Condition.2 +
              Bldg.Type +
              House.Style +
              Roof.Matl +
@@ -151,7 +151,7 @@ model = lm(SalePrice ~
              Fireplace.Qu +
              Garage.Type +
              Pool.QC
-           , House_Data)
+           , House_Data_Train)
 summary(model)
 plot(model)
 
@@ -179,6 +179,14 @@ summary(investigative_lm)
 ```
 
 ### Analysis
+R^2 of testing set
+```{r}
+plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
+
+r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
+          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
+print(r2)
+```
 
 • Which predictor variables, if any, should be included in the model a-priority?
 
@@ -220,6 +228,11 @@ The highest correlation numerical variables and most statistically significant c
   
 ## Results
 
+*Results*: In this section, you should report the results obtained by fitting the proposed models in the
+previous section. Emphasis should be placed on clarity, as if the report were a statistical consultant’s
+report for a nonstatistician. For instance, loads of R output would, in general, not be acceptable. Plots
+and well-organized tables are good things to have in this section. Possible questions to be addressed
+here are the following:
 • What is the final regression model for the data?
 
 • Using the standard diagnostic tests, does the model appear to fit the data well?
