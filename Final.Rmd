@@ -191,6 +191,11 @@ R^2 of testing set
 ```{r}
 plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
 
+r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
+          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
+print(r2)
+```
+
 • Which predictor variables, if any, should be included in the model a-priority?
 
 The highest correlation numerical variables and most statistically significant categorical listed under "The Data" are of the most interest and are the most prioritized in the model. (Neighborhoods, lot area, total rooms above grade, year built, and total square feet etc.)
@@ -231,12 +236,6 @@ The highest correlation numerical variables and most statistically significant c
   
 
 ## Results
-
-
-r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
-          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
-print(r2)
-```
 
 *Results*: In this section, you should report the results obtained by fitting the proposed models in the
 previous section. Emphasis should be placed on clarity, as if the report were a statistical consultant’s
