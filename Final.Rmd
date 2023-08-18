@@ -56,7 +56,7 @@ for (j in 1:80){
 *Partition the data*
 ```{r}
 N = nrow(House_Data)
-num_train = as.integer(0.7 * N)
+num_train = as.integer(0.5 * N)
 train_idx = sample(1:N, size=num_train, replace=F)
 test_idx = setdiff(1:N, train_idx)
 House_Data_Train = House_Data[train_idx,]
@@ -149,7 +149,7 @@ model = lm(sqrt(SalePrice) ~
              #Categorical
              Neighborhood +
              Condition.1 +
-          #   Condition.2 +
+             Condition.2 +
              Bldg.Type +
              House.Style +
              Roof.Matl +
