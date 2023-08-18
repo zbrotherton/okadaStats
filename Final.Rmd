@@ -127,7 +127,6 @@ corrplot(cor(Numerical_Model_Features), method = "number")
 
 ```
 
-
 *Model Draft*
 ```{r}
 #factorize these?
@@ -149,13 +148,21 @@ model = lm(sqrt(SalePrice) ~
              BsmtFin.Type.1 +
              Kitchen.Qual +
              Fireplace.Qu +
-             Garage.Type +
-             Pool.QC
+             Garage.Type
            , House_Data_Train)
 summary(model)
 plot(model)
 
 ```
+*VIF of Predictor Variables*
+
+```{r}
+install.packages('car')
+library(car)
+vifs = vif(model)
+print(vifs)
+```
+
 
 ```{r}
 #to investigate numerical variables
@@ -225,6 +232,8 @@ The highest correlation numerical variables and most statistically significant c
   • Full Bath ~ TotRmsAbvGrd (Does not include bathrooms)
   
   • Exter Qual ~ Exter Cond (Can have good quality materials in bad condition)
+  
+Pool Quality and Roof Material were highly correlated with each other, running a variance inflation factor gave us an error signifying ridiculously high correlation between 2 variables, which we found to be Pool Quality and Roof Material. 
   
 ## Results
 
