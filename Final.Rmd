@@ -105,6 +105,7 @@ House_Data_Categorical$SalePrice = House_Data$SalePrice
 
 investigative_lm = lm(SalePrice ~ ., data = subset(House_Data_Categorical, select = -c(Utilities)))
 summary(investigative_lm)
+confint(investigative_lm)
 ```
 
 We built an investigative linear model using every categorical variable to predict `SalePrice`, and identified that the most statistically significant categorical variables are (measured in factors with p-value < 0.001), `Neighborhood` (4), `Condition.2` (1), `Bldg.Type` (3), `House.Style` (2), `Roof.Matl` (6), `Exter.Qual` (2), `BsmtFin.Type.1` (2), `Overall.Qual` (2), and `Kitchen.Qual` (3). 
@@ -114,136 +115,6 @@ We built an investigative linear model using every categorical variable to predi
 • Which predictor variables, if any, should be included in the model a priori?
 
 >The most statistically significant predictors should be included in the model a priori are Overall Quality, Ground Living Area, Building Type and Neighborhood. 
-
-*Partition the data*
-```{r}
-N = nrow(House_Data)
-num_train = as.integer(0.5 * N)
-train_idx = sample(1:N, size=num_train, replace=F)
-test_idx = setdiff(1:N, train_idx)
-House_Data_Train = House_Data[train_idx,]
-House_Data_Test = House_Data[test_idx,]
-```
-
-We partitioned the data into a training set and a test set using a 50-50 split. 
-
-*Model*
-```{r}
-par(mfrow=c(2,2))
-model = lm(SalePrice ~ 
-             #Numerical
-             Garage.Cars + 
-             Gr.Liv.Area +
-             Year.Built +
-             Year.Remod.Add +
-             Full.Bath +
-             #Categorical
-             Overall.Qual +
-             Neighborhood +
-             Condition.2 +
-             Bldg.Type +
-             House.Style +
-             Roof.Matl +
-             Exter.Qual +
-             BsmtFin.Type.1 +
-             Kitchen.Qual
-           , House_Data_Train)
-summary(model)
-plot(model)
-```
-
-Based off the predictors we previously found to be the most significant, we made a linear model. 
-
-```{r}
-House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Condition.2=="RRAn",])
-House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Roof.Matl=="ClyTile",])
-#House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Full.Bath=="4",])
-plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
-r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
-          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
-print(r2)
-```
-
-```{r}
-
-outlier_rows_train = c(1542, 581, 1325, 503, 813, 1993, 652, 1836, 368, 1328, 583, 165, 934, 18, 1505, 687, 535, 1273, 1643)
-
-outlier_rows_removal = c()
-
-for(val in outlier_rows_train){
-  for(num in 1 : nrow(House_Data_Train)){
-    if(identical(House_Data_Train[num, ], House_Data[val, ])){
-      outlier_rows_removal = append(outlier_rows_removal, num)
-    }
-  }
-}
-
-House_Data_No_Outliers = House_Data_Train[ -outlier_rows_removal, ]
-
-#factorize these?
-model_no_outliers = lm(SalePrice ~ 
-             #Numerical
-             Overall.Qual +
-             Gr.Liv.Area +
-             Year.Built +
-             Year.Remod.Add +
-             Full.Bath +
-             #Categorical
-             Neighborhood +
-             Condition.1 +
-             Condition.2 +
-             Bldg.Type +
-             House.Style +
-             Roof.Matl +
-             Exter.Qual +
-             BsmtFin.Type.1 +
-             Kitchen.Qual +
-             Fireplace.Qu +
-             Garage.Type
-           , House_Data_No_Outliers)
-summary(model_no_outliers)
-plot(model_no_outliers)
-
-
-```
-
-
-
-
-*VIF of Predictor Variables*
-```{r}
-
-vifs = vif(model)
-print(vifs)
-```
-
-*Confidence Intervals*
-```{r}
-
-relevant_predictors = c(
-  "Overall.Qual",
-  "Gr.Liv.Area",
-  "Year.Built",
-  "Year.Remod.Add",
-  "Full.Bath"
-)
-
-confint(model, relevant_predictors)
-```
-
-### Analysis
-R^2 of testing set
-```{r}
-House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Condition.2=="RRAn",])
-House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Roof.Matl=="ClyTile",])
-#House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Full.Bath=="4",])
-plot(House_Data_Test$SalePrice, predict(model_no_outliers, newdata = House_Data_Test, type = "response"))
-r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model_no_outliers, newdata = House_Data_Test, type = "response")) ^ 2)
-          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
-print(r2)
-```
-
-
 
 • Are there any interactions that should be considered for inclusion in the model?
 
@@ -263,7 +134,6 @@ print(r2)
   
   • Garage Qual ~ Garage Cond (Quality depends on Conditions)
 
-
 • Are there any three way interactions that should be considered?
 
   • 1st Flr Sf ~ 2nd Flr Sf ~ Gr Liv Area (1st Flr Sf and Gr Liv Area have high correlations)
@@ -272,43 +142,122 @@ print(r2)
   
   • Neighborhood ~ Condition 1 ~ Condition 2 (All related to physical location)
   
-  
 • Are there any interactions that should NOT be considered?
 
   • Full Bath ~ TotRmsAbvGrd (Does not include bathrooms)
   
   • Exter Qual ~ Exter Cond (Can have good quality materials in bad condition)
   
-Pool Quality and Roof Material were highly correlated with each other, running a variance inflation factor gave us an error signifying collinearity between 2 variables, which we found to be Pool Quality and Roof Material. 
+We added an interaction term for `Neighborhood` and `Condition.2`. 
 
-Error Given: ~There are aliased coefficients in the model.
+*Partition the data*
+```{r}
+N = nrow(House_Data)
+num_train = as.integer(0.5 * N)
+train_idx = sample(1:N, size=num_train, replace=F)
+test_idx = setdiff(1:N, train_idx)
+House_Data_Train = House_Data[train_idx,]
+House_Data_Test = House_Data[test_idx,]
+```
 
-  
+We partitioned the data into a training set and a test set using a 50-50 split. 
+
 ## Results
 
-*Results*: In this section, you should report the results obtained by fitting the proposed models in the
-previous section. Emphasis should be placed on clarity, as if the report were a statistical consultant’s
-report for a nonstatistician. For instance, loads of R output would, in general, not be acceptable. Plots
-and well-organized tables are good things to have in this section. Possible questions to be addressed
-here are the following:
+*Model*
+```{r}
+par(mfrow=c(2,2))
+model = lm(SalePrice ~ 
+             #Numerical
+             Garage.Cars + 
+             Gr.Liv.Area +
+             Year.Built +
+             Year.Remod.Add +
+             Full.Bath +
+             #Categorical
+             Overall.Qual +
+             Neighborhood +
+             Condition.2 +
+             Neighborhood * Condition.2 +
+             Bldg.Type +
+             House.Style +
+             Roof.Matl +
+             Exter.Qual +
+             BsmtFin.Type.1 +
+             Kitchen.Qual
+           , House_Data_Train)
+summary(model)
+plot(model)
+```
 • What is the final regression model for the data?
+>The final regression model for the data is a linear regression model that predicts sale price using the most significant predictors.
 
-• Using the standard diagnostic tests, does the model appear to fit the data well?
+*Model summary*
+Observing the summary of the linear model, we can see that within context of our data, the median of the residuals is close to 0 at a value of 182, indicating the residuals are not skewed; additionally, the minimum and maximum and first quartile and third quartile are mostly symmetric, with the maximum being marginally asymmetric. Our linear model resulted in a $R^2$ value of 0.91 on the training set and an adjusted $R^2$ value of 0.90. The models p value for its F-statistic, < 2.2e-16, indicates that the model as a whole is statistically significant. 
+
+*Diagnostic plots*
+  • While observing the residuals vs leverage plot, we noticed that there are some outliers present,       but no outliers have an unusually high cook's distance. 
+
+  • While observing the residuals vs fitted plot, it didn't seem as though the model exhibits              heteroskedasticity. Additionally, the fact that we observe and equal amount of residuals above and     below the line provides evidence against any possibility of non-linearity. 
+  
+  • Analyzing the scale location plot, further evidence is provided that there is no                       heteroskedasticity, due to the residuals' constant variance around the trend line, which does not      exhibit a steep slope. 
+  
+  • Using the standard diagnostic tests, does the model appear to fit the data well?
+  > Using these diagnostic metrics, the model appears to fit the data well. 
+  
+*VIF of Predictor Variables*
+```{r}
+vifs = vif(model)
+print(vifs)
+```
+
+We used a variance influence factor test to check our predictor variables for collinearity, during this test we found `PoolQC` and `Roof.Matl` to be near perfectly correlated with each other. This near perfect collinearity of two variables that are not intuitively correlated was due to `PoolQC` being filled with mostly "none" values, and `Roof.Matl` being filled with the same "CompShg" value, making these variables seem as though a "CompShg" in `Roof.Matl` was correlated with a "None" in `PoolQC`. We decided to drop `PoolQC` because the "None" values had little to no significance. Aside from this, we determined that all other variables showed an acceptable level of collinearity. 
+
+*Confidence Intervals*
 
 • What are the final confidence intervals for the effects of interest mentioned in the study section?
 
-  • 
-  
+```{r}
 
-Use your validation data to construct these intervals. Do these intervals seem very sensitive to the
+relevant_predictors = c(
+  "Gr.Liv.Area",
+  "Year.Built",
+  "Year.Remod.Add",
+  "Full.Bath",
+  "Garage.Cars"
+)
+
+confint(model, relevant_predictors)
+```
+  
+These are confidence intervals for the coefficents of our numerical variables. 
+
+• Use your validation data to construct these intervals. Do these intervals seem very sensitive to the
 choice of model (i.e. do they vary widely for different choices of variables in the model)?
+>Yes, these intervals do seem sensitive to the choice of model, as they changed drastically when computed on the investigative model versus the final model. 
+
+*Drop Levels not Present in Training Data*
+```{r}
+House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Condition.2=="RRAn",])
+House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Roof.Matl=="ClyTile",])
+```
+
+We had to drop some levels from the testing data that were not present in the training data. 
 
 • What is your estimated prediction accuracy for your model? (Evaluated on the validation set).
+
+*Calculate $R^2$ on Testing Data*
+```{r}
+plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
+r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
+          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
+print(r2)
+```
+We found that the $R^2$ value is equal to ~0.88 for the testing data, which indicates that our model performs successfully and was not overfit to the training data. 
 
 • Compare the intervals constructed using your final selected model fit to the validation set to the
 same intervals constructed on the training set. Are they very different? Which do you believe
 more?
-
 
 ## Acknowledgements
 
