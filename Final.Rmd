@@ -159,6 +159,7 @@ House_Data_Test = House_Data[test_idx,]
 
 *Model Draft*
 ```{r}
+
 #factorize these?
 model = lm(SalePrice ~ 
              #Numerical
@@ -185,6 +186,62 @@ plot(model)
 
 ```
 
+```{r}
+House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Condition.2=="RRAn",])
+House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Roof.Matl=="ClyTile",])
+#House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Full.Bath=="4",])
+plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
+r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
+          /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
+print(r2)
+```
+
+```{r}
+
+outlier_rows_train = c(1542, 581, 1325, 503, 813, 1993, 652, 1836, 368, 1328, 583, 165, 934, 18, 1505, 687, 535, 1273, 1643)
+
+outlier_rows_removal = c()
+
+for(val in outlier_rows_train){
+  for(num in 1 : nrow(House_Data_Train)){
+    if(identical(House_Data_Train[num, ], House_Data[val, ])){
+      outlier_rows_removal = append(outlier_rows_removal, num)
+    }
+  }
+}
+
+House_Data_No_Outliers = House_Data_Train[ -outlier_rows_removal, ]
+
+#factorize these?
+model_no_outliers = lm(SalePrice ~ 
+             #Numerical
+             Overall.Qual +
+             Gr.Liv.Area +
+             Year.Built +
+             Year.Remod.Add +
+             Full.Bath +
+             #Categorical
+             Neighborhood +
+             Condition.1 +
+             Condition.2 +
+             Bldg.Type +
+             House.Style +
+             Roof.Matl +
+             Exter.Qual +
+             BsmtFin.Type.1 +
+             Kitchen.Qual +
+             Fireplace.Qu +
+             Garage.Type
+           , House_Data_No_Outliers)
+summary(model_no_outliers)
+plot(model_no_outliers)
+
+
+```
+
+
+
+
 *VIF of Predictor Variables*
 ```{r}
 library(car)
@@ -194,52 +251,16 @@ print(vifs)
 
 *Confidence Intervals*
 ```{r}
-#Overall.Qual
-#Gr.Liv.Area
-#Year.Built
-#Year.Remod.Add
-#Full.Bath
 
-#NeighborhoodCrawfor
-#NeighborhoodGrnHill
-#NeighborhoodNoRidge
-#NeighborhoodNridgHt
-#NeighborhoodStoneBr
+relevant_predictors = c(
+  "Overall.Qual",
+  "Gr.Liv.Area",
+  "Year.Built",
+  "Year.Remod.Add",
+  "Full.Bath"
+)
 
-#Condition.1PosA
-#Condition.2PosA
-
-#Bldg.TypeTwnhs
-#Bldg.TypeTwnhsE
-
-#House.Style1Story
-#House.Style2.5Fin
-
-#House.StyleSFoyer
-#House.StyleSLvl
-
-#Roof.MatlCompShg
-#Roof.MatlMembran
-#Roof.MatlMetal
-#Roof.MatlTar&Grv
-#Roof.MatlWdShake
-#Roof.MatlWdShngl
-
-#Exter.QualFa
-#Exter.QualGd
-#Exter.QualTA
-
-#Kitchen.QualFa
-#Kitchen.QualGd
-#Kitchen.QualTA
-
-#Fireplace.QuGd
-#Fireplace.QuNone
-
-#Garage.TypeBuiltIn
-
-
-confint(model)
+confint(model, relevant_predictors)
 ```
 
 ### Analysis
@@ -248,8 +269,8 @@ R^2 of testing set
 House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Condition.2=="RRAn",])
 House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Roof.Matl=="ClyTile",])
 #House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Full.Bath=="4",])
-plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
-r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
+plot(House_Data_Test$SalePrice, predict(model_no_outliers, newdata = House_Data_Test, type = "response"))
+r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model_no_outliers, newdata = House_Data_Test, type = "response")) ^ 2)
           /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
 print(r2)
 ```
