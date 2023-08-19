@@ -178,7 +178,6 @@ model = lm(SalePrice ~
              Overall.Qual +
              Neighborhood +
              Condition.2 +
-             Neighborhood * Condition.2 +
              Bldg.Type +
              House.Style +
              Roof.Matl +
@@ -211,7 +210,7 @@ vifs = vif(model)
 print(vifs)
 ```
 
-We used a variance influence factor test to check our predictor variables for collinearity, during this test we found `PoolQC` and `Roof.Matl` to be near perfectly correlated with each other. This near perfect collinearity of two variables that are not intuitively correlated was due to `PoolQC` being filled with mostly "none" values, and `Roof.Matl` being filled with the same "CompShg" value, making these variables seem as though a "CompShg" in `Roof.Matl` was correlated with a "None" in `PoolQC`. We decided to drop `PoolQC` because the "None" values had little to no significance. Aside from this, we determined that all other variables showed an acceptable level of collinearity. 
+We used a variance influence factor test to check our predictor variables for collinearity. During this test, we found `PoolQC` and `Roof.Matl` to be almost perfectly correlated with each other. This near perfect collinearity of two variables that are not intuitively correlated was due to `PoolQC` being filled with mostly "none" values, and `Roof.Matl` being filled with the same "CompShg" value, making these variables seem as though a "CompShg" in `Roof.Matl` was correlated with a "None" in `PoolQC`. We decided to drop `PoolQC` because the "None" values had little to no significance. Additionally, after adding an interaction term for `Condition.2` and `Neighborhood`, this error reappeared. We elected to remove the interaction term due to this error. Aside from this, we determined that all other variables showed an acceptable level of collinearity. 
 
 *Confidence Intervals*
 
