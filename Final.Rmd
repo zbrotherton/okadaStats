@@ -8,12 +8,11 @@ output: pdf_document
 # Project Description
 
 ```{r}
-set.seed(123)
+set.seed(2158)
 House_Data = read.table(url('https://raw.githubusercontent.com/zbrotherton2158/okadaStats/master/ames2000_NAfix.csv'), sep=',', header=T)
 ```
 
 ## The study
-questions to be answered are the following:
 • What field does the data come from?
   This data comes from the assessors office of Ames, Iowa
 • What are the goals of the study? Are there any effects of particular interest?
@@ -103,19 +102,19 @@ The variables are seemingly random between discrete, ordinal, nominal, and conti
   
   The most statistically significant categorical variables are:
   
-  • Neighborhood (4)
+  • Overall.Qual (|t|<2e-16)
   
-  • Condition.2 (1)
+  • Gr.Liv.Area (|t|<2e-16)
   
-  • Bldg.Type (3)
+  • Year.Built (|t|<9.05e-15)
   
-  • House.Style (2)
+  • Year.Remod.Add (|t|<1.01e-06)
   
-  • Roof.Mat (6)
+  • Neighborhood (|t|<??)
   
-  • Exter.Qual (3)
+  • Condition.2 (|t|<??)
   
-  • Kitchen.Qual (3)
+  • Bldg.Type (|t|<??)
   
 ## The models
 *Clean "none" values*
@@ -154,6 +153,13 @@ for (j in 1:80){
 
 ```
 
+*Factorizing Discrete Variables*
+```{r}
+House_Data$MS.SubClass = factor(House_Data$MS.SubClass)
+House_Data$Overall.Qual = factor(House_Data$Overall.Qual)
+House_Data$Overall.Cond = factor(House_Data$Overall.Cond)
+```
+
 *Partition the data*
 ```{r}
 N = nrow(House_Data)
@@ -164,11 +170,10 @@ House_Data_Train = House_Data[train_idx,]
 House_Data_Test = House_Data[test_idx,]
 ```
 
-
 *Model Draft*
 ```{r}
 #factorize these?
-model = lm(sqrt(SalePrice) ~ 
+model = lm(SalePrice ~ 
              #Numerical
              Overall.Qual +
              Gr.Liv.Area +
@@ -195,7 +200,6 @@ plot(model)
 
 *VIF of Predictor Variables*
 ```{r}
-install.packages('car')
 library(car)
 vifs = vif(model)
 print(vifs)
@@ -254,8 +258,10 @@ confint(model)
 ### Analysis
 R^2 of testing set
 ```{r}
+House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Condition.2=="RRAn",])
+House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Roof.Matl=="ClyTile",])
+#House_Data_Test <- droplevels(House_Data_Test[!House_Data_Test$Full.Bath=="4",])
 plot(House_Data_Test$SalePrice, predict(model, newdata = House_Data_Test, type = "response"))
-
 r2 = 1 - (sum((House_Data_Test$SalePrice - predict(model, newdata = House_Data_Test, type = "response")) ^ 2)
           /sum((House_Data_Test$SalePrice - mean(House_Data_Test$SalePrice)) ^ 2))
 print(r2)
