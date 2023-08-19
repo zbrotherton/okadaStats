@@ -165,8 +165,7 @@ We partitioned the data into a training set and a test set using a 50-50 split.
 ## Results
 
 *Model*
-```{r}
-par(mfrow=c(2,2))
+```{r, message = FALSE}
 model = lm(SalePrice ~ 
              #Numerical
              Garage.Cars + 
@@ -185,7 +184,18 @@ model = lm(SalePrice ~
              BsmtFin.Type.1 +
              Kitchen.Qual
            , House_Data_Train)
+
+```
+
+
+*Generate Summary for Model*
+```{r, eval = FALSE}
 summary(model)
+```
+
+*Generate Diagnostic Plots for model*
+```{r, warning = FALSE}
+par(mfrow=c(2,2))
 plot(model)
 ```
 • What is the final regression model for the data?
@@ -257,6 +267,40 @@ We found that the $R^2$ value is equal to ~0.88 for the testing data, which indi
 • Compare the intervals constructed using your final selected model fit to the validation set to the
 same intervals constructed on the training set. Are they very different? Which do you believe
 more?
+
+```{r}
+modelTest = lm(SalePrice ~ 
+             #Numerical
+             Garage.Cars + 
+             Gr.Liv.Area +
+             Year.Built +
+             Year.Remod.Add +
+             Full.Bath +
+             #Categorical
+             Overall.Qual +
+             Neighborhood +
+             Condition.2 +
+             Bldg.Type +
+             House.Style +
+             Roof.Matl +
+             Exter.Qual +
+             BsmtFin.Type.1 +
+             Kitchen.Qual
+           , House_Data_Test)
+
+relevant_predictors = c(
+  "Gr.Liv.Area",
+  "Year.Built",
+  "Year.Remod.Add",
+  "Full.Bath",
+  "Garage.Cars"
+)
+
+confint(modelTest, relevant_predictors)
+```
+We retrained the model using the testing set, so we could generate confidence intervals for the testing coefficients as described. While some of these confidence intervals remain relatively consistent across models, others change significantly. Notably, both bounds of `Full.Bath` shift up by ~2000. For this reason, we feel that
+confidence intervals generated on the testing set are more trustworthy, because less of the possible range is negative, and there is no intuitive reason to believe that increasing `Full.Bath` should decrease the predicted sale price. Additionally, the range of each confidence interval generated for the testing data is less than the range of the intervals generated for the training data.
+
 
 ## Acknowledgements
 
